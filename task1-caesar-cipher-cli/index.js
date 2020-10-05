@@ -1,10 +1,9 @@
 const fs = require('fs');
 const { pipeline, Transform } = require('stream');
 const { program } = require('commander');
-const help = require('./src/help');
 
 const { encode, decode } = require('./src/cipher');
-const { validateShift, validateAction } = require('./src/validators');
+const { validateShift, validateAction, validateInputFile, validateOutputFile } = require('./src/validators');
 
 program
   .storeOptionsAsProperties(false)
@@ -18,8 +17,8 @@ program
 
 const { shift, action, input, output } = program.opts();
 
-const readStream = input ? fs.createReadStream(input) : null;
-const writeStream = output ? fs.createWriteStream(output, { flags: 'a+' }) : null;
+const readStream = input ? validateInputFile(input) : null;
+const writeStream = output ? validateOutputFile(output) : null;
 
 const transformStream = new Transform({
   transform(chunk, _, done) {
@@ -48,4 +47,4 @@ pipeline(
       process.stdout.write('Operation done!');
     }
   }
-)
+);
