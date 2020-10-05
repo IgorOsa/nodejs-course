@@ -5,7 +5,7 @@ Simple CLI tool for encrypting text data (only Latin characters will be affected
 ## Install
 
 To work with tool clone this repo on your machine with `git clone` command.
-Then enter task1-caesar-cipher-cli directory:
+Then enter `task1-caesar-cipher-cli` directory:
 
 `cd task1-caesar-cipher-cli`
 
@@ -15,12 +15,12 @@ Install dependencies:
 
 ## Usage
 
-This is Caesar cipher CLI tool. It accept 4 main options (short alias or full name):
+This Caesar cipher CLI tool accepts 4 main options (short alias or full name):
 
--s, --shift: a shift
+-s, --shift: a shift (required)
 -i, --input: an input file
 -o, --output: an output file
--a, --action: an action encode/decode
+-a, --action: an action encode/decode (required)
 
 **Example of usage:**
 
