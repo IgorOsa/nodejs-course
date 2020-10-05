@@ -15,7 +15,7 @@ function isUpper(char) {
 function shiftAlphabet(shift) {
   return alphabet.reduce((map, char, index, array) => {
     const maxIndex = alphabet.length - 1;
-    const totalIndex = index + shift;
+    const totalIndex = index + (shift % alphabet.length);
 
     const effectiveIndex =
       totalIndex > maxIndex ? totalIndex - maxIndex - 1 : totalIndex;
