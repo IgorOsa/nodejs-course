@@ -23,24 +23,23 @@ function validateAction(action) {
 }
 
 function validateInputFile(path) {
-    fs.access(path, fs.constants.R_OK, (err) => {
-        if (err) {
-            process.stderr.write('Error: Input file not accessible!');
-            process.exit(1);
-        }
-    })
+    try {
+        fs.accessSync(path, fs.constants.R_OK);
+    } catch (err) {
+        process.stderr.write('Error: Input file not accessible!');
+        process.exit(1);
+    }
 
     return fs.createReadStream(path);
 }
 
 function validateOutputFile(path) {
-    fs.access(path, fs.constants.W_OK, (err) => {
-        if (err) {
-            fs.unlinkSync(path);
-            process.stderr.write('Error: Output file not accessible!');
-            process.exit(1);
-        }
-    });
+    try {
+        fs.accessSync(path, fs.constants.W_OK);
+    } catch (err) {
+        process.stderr.write('Error: Output file not accessible!');
+        process.exit(1);
+    }
 
     return fs.createWriteStream(path, { flags: 'a+' });
 }
