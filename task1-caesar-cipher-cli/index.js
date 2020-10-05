@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { pipeline, Transform } = require('stream');
 const { program } = require('commander');
 const help = require('./src/help');
@@ -15,25 +16,36 @@ program
   .requiredOption('-a, --action <encode/decode>', 'an action encode/decode', validateAction)
   .parse(process.argv)
 
-const shift = program.opts().shift;
-const action = program.opts().action;
+const { shift, action, input, output } = program.opts();
+
+const readStream = input ? fs.createReadStream(input) : null;
+const writeStream = output ? fs.createWriteStream(output, { flags: 'a+' }) : null;
 
 const transformStream = new Transform({
   transform(chunk, _, done) {
     let data = chunk.toString();
-    let result = '';
 
     if (action === 'encode') {
-      result = encode(data, shift);
+      this.push(encode(data, shift));
     }
 
     if (action === 'decode') {
-      result = decode(data, shift);
+      this.push(decode(data, shift));
     }
 
-    this.push(result);
     done();
   }
 });
 
-process.stdin.pipe(transformStream).pipe(process.stdout);
+pipeline(
+  readStream || process.stdin,
+  transformStream,
+  writeStream || process.stdout,
+  err => {
+    if (err) {
+      process.stderr.write('Operation failed!', err);
+    } else {
+      process.stdout.write('Operation done!');
+    }
+  }
+)
